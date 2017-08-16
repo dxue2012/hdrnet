@@ -9,10 +9,13 @@ LIB_DIR = lib
 
 CC = c++ -std=c++11 #-g
 NVCC = nvcc -std c++11 #-g -pg
-CFLAGS = -fPIC -I$(TF_INC) -O2 -D _GLIBCXX_USE_CXX11_ABI=0
-LDFLAGS = -L$(CUDA_HOME)/lib64 -lcudart
-NVFLAGS = -DGOOGLE_CUDA=1 -x cu -Xcompiler -fPIC -I$(TF_INC) \
-					-expt-relaxed-constexpr -Wno-deprecated-gpu-targets -ftz=true -D _GLIBCXX_USE_CXX11_ABI=0
+# Use flag -D _GLIBCXX_USE_CXX11_ABI=0 for gcc > 5
+# Use flag -undefined dynamic_lookup for OSX
+CFLAGS = -fPIC -I$(TF_INC) -O2 -undefined dynamic_lookup
+LDFLAGS = -L$(CUDA_HOME)/lib -lcudart
+# Use flag -D _GLIBCXX_USE_CXX11_ABI=0 for gcc > 5
+NVFLAGS = -DGOOGLE_CUDA=1 -x cu -Xcompiler -fPIC -I $(TF_INC) \
+					-expt-relaxed-constexpr -Wno-deprecated-gpu-targets -ftz=true
 
 
 SRC = bilateral_slice.cc
